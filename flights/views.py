@@ -8,7 +8,7 @@ def index(request):
 
     filter = request.GET.get("minrating")
     if filter is not None:
-        itineraries = Itinerarie.objects.filter(agent_rating__gte=filter)
+        itineraries = Itinerarie.objects.filter(agent__agent_rating__gte=filter)
     else:
         itineraries = Itinerarie.objects.all()
 
