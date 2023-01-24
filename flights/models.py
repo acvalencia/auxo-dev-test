@@ -25,7 +25,7 @@ class Leg(models.Model):
   duration_mins = models.IntegerField(default=0)
 
   def __str__(self):
-    return self.id
+    return f'{self.departure_airport}-{self.arrival_airport}'
 
 class Agent(models.Model):
   agent = models.CharField(max_length=255, primary_key=True)
