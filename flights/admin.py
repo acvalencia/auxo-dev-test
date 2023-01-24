@@ -1,6 +1,10 @@
 from django.contrib import admin
-from .models import Leg, Itinerarie
+from flights.models import Airport, Airline, Agent, Itinerarie, Leg
 
+admin.site.site_header = 'Administration'
 # Register your models here.
-admin.site.register(Leg)
+admin.site.register(Airport)
+admin.site.register(Airline)
+admin.site.register(Agent)
 admin.site.register(Itinerarie)
+admin.site.register(Leg)
