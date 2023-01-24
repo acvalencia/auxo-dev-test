@@ -1,4 +1,4 @@
-from flights.models import Itinerarie, Leg
+from flights.models import Agent, Itinerarie, Leg
 from django.core.management.base import BaseCommand
 from urllib.request import urlopen
 import json
@@ -60,11 +60,14 @@ def create_data():
 
     for item in itineraries:
 
+      agent = Agent(agent = item['agent'],
+                    agent_rating = item['agent_rating'])
+      agent.save()
+
       itinerarie = Itinerarie(
         id = item['id'],
         price = item['price'],
-        agent = item['agent'],
-        agent_rating = item['agent_rating'],
+        agent = agent
       )
       itinerarie.save()
 
