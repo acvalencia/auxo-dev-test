@@ -1,4 +1,4 @@
-from flights.models import Itinerarie, Leg
+from flights.models import Airport, Airline, Agent, Itinerarie, Leg
 from django.core.management.base import BaseCommand
 from urllib.request import urlopen
 import json
@@ -43,28 +43,49 @@ def create_data():
     legs = data['legs']
 
     for item in legs:
+
+      # Create Airport object
+      # Created = false if object exists
+      departure_airport, dep_created = Airport.objects.get_or_create(id=item['departure_airport'])
+      arrival_airport, arri_created  = Airport.objects.get_or_create(id=item['arrival_airport'])
+
+      if dep_created:
+        departure_airport.save()
+
+      if arri_created:
+        arrival_airport.save()
+
       departure_datetime = datetime.datetime.strptime(item['departure_time'], format)
       arrival_datetime = datetime.datetime.strptime(item['arrival_time'], format)
+
+      # Craete Airline
+      airline, air_created = Airline.objects.get_or_create(id = item['airline_id'], name = item['airline_name'])
+      if air_created:
+        airline.save()
+
+      # Create Leg Object
       leg = Leg(
         id =  item['id'],
-        departure_airport = item['departure_airport'],
-        arrival_airport = item['arrival_airport'],
+        departure_airport = departure_airport,
+        arrival_airport = arrival_airport,
         departure_time = departure_datetime,
         arrival_time = arrival_datetime,
         stops = item['stops'],
-        airline_name = item['airline_name'],
-        airline_id = item['airline_id'],
+        airline = airline,
         duration_mins = item['duration_mins']
       )
       leg.save()
 
     for item in itineraries:
 
+      agent = Agent(agent = item['agent'],
+                    agent_rating = item['agent_rating'])
+      agent.save()
+
       itinerarie = Itinerarie(
         id = item['id'],
         price = item['price'],
-        agent = item['agent'],
-        agent_rating = item['agent_rating'],
+        agent = agent
       )
       itinerarie.save()
 
