@@ -1,32 +1,31 @@
 from django.db import models
 
 # Create your models here.
-class Leg(models.Model):
-  id = models.CharField(max_length=255, primary_key=True)
-  departure_airport = models.CharField(max_length=255, blank=True, null=True) # FORING KEY
-  arrival_airport = models.CharField(max_length=255, blank=True, null=True)   # FORING KEY
-  departure_time = models.DateTimeField()
-  arrival_time = models.DateTimeField()
-  stops = models.IntegerField(default=0)
-  airline_name = models.CharField(max_length=255, blank=True, null=True) # REMOVE THIS
-  airline_id = models.CharField(max_length=255, blank=True, null=True)   # FORING KEY
-  duration_mins = models.IntegerField(default=0)
+class Airport(models.Model):
+  id = models.CharField(max_length=100, primary_key=True)
 
   def __str__(self):
     return self.id
 
-# class Airport(models.Model):
-#   id = models.CharField(max_length=100, primary_key=True)
+class Airline(models.Model):
+  id = models.CharField(max_length=100, primary_key=True)
+  name = models.CharField(max_length=255, blank=True, null=True)
 
-#   def __str__(self):
-#     return self.id
+  def __str__(self):
+    return self.name
 
-# class Airline(models.Model):
-#   id = models.CharField(max_length=100, primary_key=True)
-#   name = models.CharField(max_length=255, blank=True, null=True)
+class Leg(models.Model):
+  id = models.CharField(max_length=255, primary_key=True)
+  departure_airport = models.ForeignKey(Airport, related_name='departure_airport', on_delete=models.CASCADE)
+  arrival_airport = models.ForeignKey(Airport, related_name='arrival_airport', on_delete=models.CASCADE)
+  departure_time = models.DateTimeField()
+  arrival_time = models.DateTimeField()
+  stops = models.IntegerField(default=0)
+  airline = models.ForeignKey(Airline, on_delete=models.CASCADE)
+  duration_mins = models.IntegerField(default=0)
 
-#   def __str__(self):
-#     return self.name
+  def __str__(self):
+    return self.id
 
 class Agent(models.Model):
   agent = models.CharField(max_length=255, primary_key=True)
